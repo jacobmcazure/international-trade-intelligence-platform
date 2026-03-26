@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrate:up": "db-migrate up",
-    "migrate:down": "db-migrate down",
+    "migrate:up": "dotenv -e ../.env -- db-migrate up",
+    "migrate:down": "dotenv -e ../.env -- db-migrate down",
     "migrate:create": "db-migrate create"
   },
   "keywords": [],
@@ -15,5 +15,8 @@
   "dependencies": {
     "db-migrate": "^0.11.14",
     "db-migrate-pg": "^1.5.2"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^11.0.0"
   }
 }

@@ -18,7 +18,7 @@
     "url": "https://github.com/jacobmcazure/international-trade-intelligence-platform/issues"
   },
   "homepage": "https://github.com/jacobmcazure/international-trade-intelligence-platform#readme",
-  "workspaces": { 
+  "workspaces": {
     "name": "trade-intel",
     "version": "1.0.0",
     "private": true,
@@ -26,6 +26,9 @@
       "api",
       "workers",
       "db"
-    ] 
+    ]
+  },
+  "dependencies": {
+    "fastify": "^5.8.4"
   }
 }
