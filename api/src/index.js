@@ -1,7 +1,9 @@
 //Entry point into the application
 //ESM / ECMA
 import Fastify from 'fastify'
-import firstRoute from  './our-first-route.js'
+import postgres from './plugins/postgres.js'
+import redis from './plugins/redis.js'
+import firstRoute from  './routes/health.js'
 
 // logs address automatically on startup
 const fastify = Fastify({
@@ -9,6 +11,8 @@ const fastify = Fastify({
 })
 
 // Add Route
+fastify.register(postgres)
+fastify.register(redis)
 fastify.register(firstRoute)
 
 // Run Server

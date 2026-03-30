@@ -5,7 +5,14 @@
  */
 async function routes (fastify, options) {
     fastify.get('/', async (request, reply) => {
-        return {hello: 'world'}
+        const client = await fastify.pg.connect()
+        try {
+           const { rows } = await client.query('SELECT * FROM countries')
+           const pong = await fastify.redis.ping() 
+           return {db: rows, redis: pong }
+        } finally {
+           client.release()
+        }
     })
 }
 
