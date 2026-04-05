@@ -6,7 +6,7 @@ from BasePipeline import ProcessCsv
 
 class SanctionsCsv(ProcessCsv):
     def __init__(self):
-        self.sdn_url =  "https://sanctionslistservice.ofac.treas.gov/api/download/SDN.CSV"
+        self.sdn_url = "https://sanctionslistservice.ofac.treas.gov/api/download/SDN.CSV"
         self.add_url = "https://sanctionslistservice.ofac.treas.gov/api/download/ADD.CSV"
         self.alt_url = "https://sanctionslistservice.ofac.treas.gov/api/download/ALT.CSV"
 
@@ -54,7 +54,8 @@ class SanctionsCsv(ProcessCsv):
         self.sdn_df = self.sdn_df.merge(self.aliases_df, on='ent_num', how='left')
 
 
-
     def load_sdn_data(self) -> pd.DataFrame:
         pass
+
+
 
