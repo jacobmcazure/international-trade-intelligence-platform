@@ -16,3 +16,7 @@ class ProcessCsv(ABC):
     @abstractmethod
     def loadCsv() -> pd.DataFrame:
         pass
+
+    @abstractmethod
+    def get_db_connection():
+        pass

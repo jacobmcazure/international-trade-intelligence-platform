@@ -3,6 +3,10 @@ import pandas as pd
 import io
 from abc import ABC, abstractmethod
 from BasePipeline import ProcessCsv
+import os
+import psycopg2
+from dotenv import load_dotenv
+
 
 class SanctionsCsv(ProcessCsv):
     def __init__(self):
@@ -53,9 +57,37 @@ class SanctionsCsv(ProcessCsv):
         # merge aliases into sdn
         self.sdn_df = self.sdn_df.merge(self.aliases_df, on='ent_num', how='left')
 
+    def get_db_connection(self):
+        return psycopg2.connect(
+            host=os.getenv("POSTGRES_HOST"),
+            user=os.getenv("POSTGRES_USER"),
+            password=os.getenv("POSTGRES_PASSWORD"),
+            dbname=os.getenv("POSTBRES_DB")
+        )
 
-    def load_sdn_data(self) -> pd.DataFrame:
-        pass
+
+    # def load_sdn_data(self) -> pd.DataFrame:
+    #     conn = self.get_db_connection();
+    #     cursor = conn.cursor();
+    #     for _, row in self.sdn_df.iterrows():
+    #         cursor.execute("""
+    #             INSERT INTO sanctions (ent_num, sdn_name, sdn_type, program, title, remarks, aliases)
+    #             VALUES (%s, %s, %s, %s, %s, %s, %s)
+    #             ON CONFLICT (ent_num) DO UPDATE SET
+    #                 sdn_name = EXCLUDED.sdn_name,
+    #                 sdn_type = EXCLUDED.sdn_type,
+    #                 program = EXCLUDED.program,
+    #                 title = EXCLUDED.title,
+    #                 remarks = EXCLUDED.remarks,
+    #                 aliases = EXCLUDED.aliases;
+    #         """, (
+    #             row['ent_num'], row['sdn_name'], row['sdn_type'], row['program'],
+    #             row['title'], row['remarks'], row['aliases']
+    #         ))
+    #     conn.commit()
+    #     cursor.close()
+    #     conn.close()
 
 
 
+test = SanctionsCsv
