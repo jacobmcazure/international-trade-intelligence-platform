@@ -1,22 +1,33 @@
+import os
+import psycopg2 as pg
 import pandas as pd
 from abc import ABC, abstractmethod
+from dotenv import load_dotenv
+
+load_dotenv()
+
 '''
 Base Class for other pipeline files to inherit
 '''
-class ProcessCsv(ABC):
+class ProcessPipeline(ABC):
     
     @abstractmethod
-    def extractCsv() -> pd.DataFrame:
+    def extract(self) -> pd.DataFrame:
         pass
 
     @abstractmethod
-    def transformCsv() -> pd.DataFrame:
+    def transform(self) -> pd.DataFrame:
         pass
 
     @abstractmethod
-    def loadCsv() -> pd.DataFrame:
+    def load(self) -> pd.DataFrame:
         pass
 
-    @abstractmethod
-    def get_db_connection():
-        pass
+    def get_db_connection(self) -> pg.extensions.connection:
+        return pg.connect(
+            host=os.getenv("POSTGRES_HOST"),
+            user=os.getenv("POSTGRES_USER"),
+            password=os.getenv("POSTGRES_PASSWORD"),
+            dbname=os.getenv("POSTBRES_DB"),
+            port=os.getenv("POSTGRES_PORT")
+        )

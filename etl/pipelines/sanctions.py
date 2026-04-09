@@ -1,14 +1,13 @@
 import requests
 import pandas as pd
 import io
-from abc import ABC, abstractmethod
-from BasePipeline import ProcessCsv
 import os
-import psycopg2
-from dotenv import load_dotenv
+import psycopg2 as pg
+from psycopg2.extras import execute_values
+from .BasePipeline import ProcessPipeline
 
 
-class SanctionsCsv(ProcessCsv):
+class SanctionsPipeline(ProcessPipeline):
     def __init__(self):
         self.sdn_url = "https://sanctionslistservice.ofac.treas.gov/api/download/SDN.CSV"
         self.add_url = "https://sanctionslistservice.ofac.treas.gov/api/download/ADD.CSV"
@@ -19,12 +18,12 @@ class SanctionsCsv(ProcessCsv):
         response.raise_for_status()
         return pd.read_csv(io.StringIO(response.text), header=None)
 
-    def download_csv(self) -> pd.DataFrame:
+    def extract(self) -> pd.DataFrame:
         self.sdn_df = self._fetch_csv(self.sdn_url)
         self.add_df = self._fetch_csv(self.add_url)
         self.alt_df = self._fetch_csv(self.alt_url)
 
-    def transform_sdn_data(self) -> pd.DataFrame:
+    def transform(self) -> pd.DataFrame:
         # -- SDN --
         self.sdn_df.columns = [
             'ent_num', 'sdn_name', 'sdn_type', 'program',
@@ -36,7 +35,7 @@ class SanctionsCsv(ProcessCsv):
 
         # -- ADD --
         self.add_df.columns = [
-            'ent_num', 'add_num', 'address', 'country', 'remarks'
+            'ent_num', 'add_num', 'address', 'city_state_zip', 'country', 'remarks'
         ]
         self.add_df = self.add_df.replace('-0-', None)
 
@@ -57,37 +56,42 @@ class SanctionsCsv(ProcessCsv):
         # merge aliases into sdn
         self.sdn_df = self.sdn_df.merge(self.aliases_df, on='ent_num', how='left')
 
-    def get_db_connection(self):
-        return psycopg2.connect(
-            host=os.getenv("POSTGRES_HOST"),
-            user=os.getenv("POSTGRES_USER"),
-            password=os.getenv("POSTGRES_PASSWORD"),
-            dbname=os.getenv("POSTBRES_DB")
-        )
+    def load(self) -> pd.DataFrame:
+        # establish connection and cursor
+        conn = self.get_db_connection();
+        cursor = conn.cursor();
+        
+        # -- sanctioned_entities --
+        sdn_columns = ['ent_num', 'sdn_name', 'sdn_type', 'program', 'title', 'remarks', 'aliases']
+        se_query = """
+            INSERT INTO sanctioned_entities (entity_id, name, entity_type, program, title, remarks, aliases)
+            VALUES %s
+            ON CONFLICT (entity_id) DO UPDATE SET
+                name = EXCLUDED.name,
+                entity_type = EXCLUDED.entity_type,
+                program = EXCLUDED.program,
+                title = EXCLUDED.title,
+                remarks = EXCLUDED.remarks,
+                aliases = EXCLUDED.aliases
+        """
+        execute_values(cursor, se_query, self.sdn_df[sdn_columns].values.tolist())
+
+        # -- sanctioned_addresses --
+        sa_columns = ['ent_num', 'address', 'city_state_zip', 'country', 'remarks']
+        sa_query = """
+            INSERT INTO sanctioned_addresses (entity_id, address, city_state_zip, country, remarks)
+            VALUES %s
+            ON CONFLICT (id) DO UPDATE SET
+                entity_id = EXCLUDED.entity_id,
+                address = EXCLUDED.address,
+                city_state_zip = EXCLUDED.city_state_zip,
+                country = EXCLUDED.country,
+                remarks = EXCLUDED.remarks
+        """
+        execute_values(cursor, sa_query, self.add_df[sa_columns].values.tolist())
 
 
-    # def load_sdn_data(self) -> pd.DataFrame:
-    #     conn = self.get_db_connection();
-    #     cursor = conn.cursor();
-    #     for _, row in self.sdn_df.iterrows():
-    #         cursor.execute("""
-    #             INSERT INTO sanctions (ent_num, sdn_name, sdn_type, program, title, remarks, aliases)
-    #             VALUES (%s, %s, %s, %s, %s, %s, %s)
-    #             ON CONFLICT (ent_num) DO UPDATE SET
-    #                 sdn_name = EXCLUDED.sdn_name,
-    #                 sdn_type = EXCLUDED.sdn_type,
-    #                 program = EXCLUDED.program,
-    #                 title = EXCLUDED.title,
-    #                 remarks = EXCLUDED.remarks,
-    #                 aliases = EXCLUDED.aliases;
-    #         """, (
-    #             row['ent_num'], row['sdn_name'], row['sdn_type'], row['program'],
-    #             row['title'], row['remarks'], row['aliases']
-    #         ))
-    #     conn.commit()
-    #     cursor.close()
-    #     conn.close()
+        conn.commit()
+        cursor.close()
+        conn.close()
 
-
-
-test = SanctionsCsv

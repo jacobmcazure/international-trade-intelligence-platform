@@ -1,8 +1,11 @@
 from fastapi import FastAPI
+from pipelines.sanctions import SanctionsPipeline
 
-app = FastAPI(title="Trade Intel ETL Service")
 
-
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+pipeline = SanctionsPipeline()
+pipeline.extract()
+print(pipeline.sdn_df.shape)
+pipeline.transform()
+print(pipeline.sdn_df.columns.tolist())
+print(pipeline.sdn_df.head())
+pipeline.load()
