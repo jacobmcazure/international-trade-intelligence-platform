@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 import io
 import os
 import psycopg2 as pg
@@ -31,20 +32,21 @@ class SanctionsPipeline(ProcessPipeline):
             'grt', 'vess_flag', 'vess_owner', 'remarks'
         ]
         self.sdn_df = self.sdn_df[['ent_num', 'sdn_name', 'sdn_type', 'program', 'title', 'remarks']]
-        self.sdn_df = self.sdn_df.replace('-0-', None)
+        self.sdn_df = self.sdn_df.replace('-0-', np.nan)
 
         # -- ADD --
         self.add_df.columns = [
             'ent_num', 'add_num', 'address', 'city_state_zip', 'country', 'remarks'
         ]
-        self.add_df = self.add_df.replace('-0-', None)
+        self.add_df = self.add_df.replace('-0-', np.nan)
 
         # -- ALT --
         self.alt_df.columns = [
             'ent_num', 'alt_num', 'alt_type', 'alt_name', 'alt_remarks'
         ]
-        self.alt_df = self.alt_df.replace('-0-', None)
 
+        self.alt_df = self.alt_df.replace('-0-', np.nan)
+        
          # concatenate aliases for each entity into a csv style string
         self.aliases_df = (
             self.alt_df.groupby('ent_num')['alt_name']
@@ -55,6 +57,9 @@ class SanctionsPipeline(ProcessPipeline):
 
         # merge aliases into sdn
         self.sdn_df = self.sdn_df.merge(self.aliases_df, on='ent_num', how='left')
+        self.sdn_df = self.sdn_df.where(self.sdn_df.notna(), None) # replace NaN with none if condition is false (if a value does not exist)
+
+
 
     def load(self) -> pd.DataFrame:
         # establish connection and cursor
@@ -76,10 +81,10 @@ class SanctionsPipeline(ProcessPipeline):
         """
         execute_values(cursor, se_query, self.sdn_df[sdn_columns].values.tolist())
 
-        # -- sanctioned_addresses --
+        # -- sanctions_addresses --
         sa_columns = ['ent_num', 'address', 'city_state_zip', 'country', 'remarks']
         sa_query = """
-            INSERT INTO sanctioned_addresses (entity_id, address, city_state_zip, country, remarks)
+            INSERT INTO sanctions_addresses (entity_id, address, city_state_zip, country, remarks)
             VALUES %s
             ON CONFLICT (id) DO UPDATE SET
                 entity_id = EXCLUDED.entity_id,
