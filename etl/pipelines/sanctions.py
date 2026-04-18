@@ -8,7 +8,9 @@ from psycopg2.extras import execute_values
 from .BasePipeline import ProcessPipeline
 
 
+# Processes OFAC Sanctions list. The null values in the csv are marked as '-0-'
 class SanctionsPipeline(ProcessPipeline):
+
     def __init__(self):
         self.sdn_url = "https://sanctionslistservice.ofac.treas.gov/api/download/SDN.CSV"
         self.add_url = "https://sanctionslistservice.ofac.treas.gov/api/download/ADD.CSV"
@@ -32,20 +34,30 @@ class SanctionsPipeline(ProcessPipeline):
             'grt', 'vess_flag', 'vess_owner', 'remarks'
         ]
         self.sdn_df = self.sdn_df[['ent_num', 'sdn_name', 'sdn_type', 'program', 'title', 'remarks']]
+        self.sdn_df = self.sdn_df.apply(lambda x: x.str.strip() if hasattr(x, 'str') else x) # strip whitespace
         self.sdn_df = self.sdn_df.replace('-0-', np.nan)
 
         # -- ADD --
         self.add_df.columns = [
             'ent_num', 'add_num', 'address', 'city_state_zip', 'country', 'remarks'
         ]
+        self.add_df = self.add_df.apply(lambda x: x.str.strip() if hasattr(x, 'str') else x) # strip whitespace
         self.add_df = self.add_df.replace('-0-', np.nan)
+
+        # fix null entity_numbers
+        # self.add_df = self.add_df[self.add_df['ent_num'].str.strip() != '']
+        # self.add_df['ent_num'] = self.add_df['ent_num'].replace('', np.nan)
+        # self.add_df = self.add_df.dropna(subset=['ent_num'])
 
         # -- ALT --
         self.alt_df.columns = [
             'ent_num', 'alt_num', 'alt_type', 'alt_name', 'alt_remarks'
         ]
 
+        self.alt_df = self.alt_df.apply(lambda x: x.str.strip() if hasattr(x, 'str') else x) # strip whitespace
         self.alt_df = self.alt_df.replace('-0-', np.nan)
+
+        print("sdn df type unique: " + str(self.sdn_df['sdn_type'].unique()))
         
          # concatenate aliases for each entity into a csv style string
         self.aliases_df = (
@@ -57,8 +69,12 @@ class SanctionsPipeline(ProcessPipeline):
 
         # merge aliases into sdn
         self.sdn_df = self.sdn_df.merge(self.aliases_df, on='ent_num', how='left')
-        self.sdn_df = self.sdn_df.where(self.sdn_df.notna(), None) # replace NaN with none if condition is false (if a value does not exist)
+        self.sdn_df = self.sdn_df.replace({np.nan: None})
+        self.sdn_df = self.sdn_df.dropna(subset=['sdn_name']) # drop any names that are null
 
+        # Filter addresses to only include those with valid entity_ids
+        valid_ent_nums = set(self.sdn_df['ent_num'])
+        self.add_df = self.add_df[self.add_df['ent_num'].isin(valid_ent_nums)]
 
 
     def load(self) -> pd.DataFrame:
