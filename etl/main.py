@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.post("/pipelines/sanctions", tags=["sanctions"], status_code=status.HTTP_202_ACCEPTED)
-async def read_sanctions():
+async def run_sanctions_pipeline():
     pipeline = SanctionsPipeline()
     pipeline.extract()
     print(pipeline.sdn_df.shape)
