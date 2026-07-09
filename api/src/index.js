@@ -15,7 +15,7 @@ const fastify = Fastify({
 fastify.register(postgres)
 fastify.register(redis)
 fastify.register(firstRoute)
-fastify.register(sanctionsRoute, {prefix: '/sanctions'})
+fastify.register(sanctionsRoute)
 
 // Run Server
 const start = async () => {
