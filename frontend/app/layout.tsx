@@ -28,12 +28,12 @@ export default function RootLayout({
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <nav>
-          <ul>
+      <body className="min-h-full flex justify-between">
+        <nav className="fixed top-0 z-50 w-full flex justify-evenly">
+          <ul className="flex justify-between gap-32">
             <li><Link href="/">Home</Link></li>
+            <li><Link href="/explore">Explore</Link></li>
             <li><Link href="/about">About</Link></li>
-            <li><Link href="/explore">explore</Link></li>
           </ul>
         </nav>
         {children}
