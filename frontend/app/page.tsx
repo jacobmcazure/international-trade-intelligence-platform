@@ -1,20 +1,46 @@
-import Image from "next/image";
 import Link from "next/link";
 import Globe from "./components/Globe.jsx";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-mist-950 font-sans dark:bg-black">
-      <Globe />
-      <main className="flex w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <h1 className="text-3xl sm:text-5xl md:text-6xl">Geo-Intelligence Trade Platform</h1>
-        <h3>International Relations Info, made easily accessible to you.</h3>
-        <h4>Whether you're an economist, a student, or just curious, you can find
-          what you're looking for here.
-        </h4>
-      </main>
-      <div>
-        <Link href="/explore" className="flex justify-center w-auto p-2 m-2 rounded-md shadow-md text-amber-100 bg-sky-500 hover:bg-sky-300">Get Started</Link>
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(5,8,20,0.98))]" />
+
+      <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6 py-24 sm:px-8 lg:px-10">
+        <section className="w-full max-w-5xl text-center">
+          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Geo-Intelligence Trade Platform</p>
+          <h1 className="mt-6 text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+            Data-driven trade intelligence for global policy and sanctions.
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-400 sm:text-xl">
+            Explore how international relations, sanctions, and market signals intersect with a single modern platform built for analysts and decision-makers.
+          </p>
+
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Link
+              href="/explore"
+              className="rounded-full bg-sky-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 transition hover:bg-sky-400"
+            >
+              Get Started
+            </Link>
+            <Link
+              href="/about"
+              className="rounded-full border border-slate-700 bg-slate-900/70 px-7 py-3 text-sm font-semibold text-slate-100 transition hover:border-slate-600 hover:bg-slate-800/80"
+            >
+              Learn More
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-24 flex w-full justify-center">
+          <div className="relative w-full max-w-3xl">
+            <div className="relative mx-auto aspect-square w-full max-w-[720px] min-h-[420px]">
+              <div className="relative h-full w-full">
+                <Globe />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
