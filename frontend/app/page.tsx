@@ -7,7 +7,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(5,8,20,0.98))]" />
 
       <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6 py-24 sm:px-8 lg:px-10">
-        <section className="w-full max-w-5xl text-center">
+        <section className="w-full max-w-5xl text-left">
           <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Geo-Intelligence Trade Platform</p>
           <h1 className="mt-6 text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
             Data-driven trade intelligence for global policy and sanctions.

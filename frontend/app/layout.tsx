@@ -29,8 +29,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-slate-950 text-slate-100">
-        <nav className="fixed top-0 z-50 w-full flex justify-evenly">
-          <ul className="flex justify-between gap-32">
+        <nav className="fixed bg-slate-900 text-slate-100 text-2xl font- top-0 z-50 w-full flex justify-evenly">
+          <ul className="flex justify-between gap-32  *:hover:text-slate-500">
             <li><Link href="/">Home</Link></li>
             <li><Link href="/explore">Explore</Link></li>
             <li><Link href="/about">About</Link></li>
