@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import World from "@react-map/world";
+import SearchBar from "../components/SearchBar";
 //import { useNavigate } from "react-router-dom";
 
 // import { csv } from "d3-fetch";
@@ -16,13 +17,15 @@ import World from "@react-map/world";
 
 export default function WorldMap() {
 
-    //const a = useNavigate();
-    const redirect = (sc) => {
-        //direct country click to here (eventually put it in search and trigger it)
-    }
+    const searchCountry = (sc) => {
+        console.log(sc);
+    };
 
     return(
-        <World onSelect={redirect} size={1200} hoverColor="lightblue" type='select-single'/>
+        <World onSelect={searchCountry} size={1400} 
+        hoverColor="lightblue" selectColor="blue" 
+        hints="1" type="select-single"
+        />
     )
 
 //     const [data, setData] = useState([]);
