@@ -29,48 +29,50 @@ const sampleData = [
     title: 'npm',
     url: 'https://www.npmjs.com/',
   },
-]
+];
 
-export default function SearchBar() {
-  const [searchTerm, setSearchTerm] = useState('') //string to search
-  const [searchResults, setSearchResults] = useState([]) //data to return from results
+export default function SearchBar({ onSearchSubmit }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   const debounce = (func, delay) => {
     let timeoutId;
     return (...args) => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => func(...args), delay)
-    }
-  }
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
 
   const handleSearch = useCallback(
     debounce((term) => {
-      if (term.trim()  === '') {
-        setSearchResults([])
+      if (term.trim() === '') {
+        setSearchResults([]);
       } else {
-        const results = sampleData.filter((item) => 
+        const results = sampleData.filter((item) =>
           item.title.toLowerCase().includes(term.toLowerCase()),
-        )
-        setSearchResults(results)
+        );
+        setSearchResults(results);
       }
     }, 300),
     [],
-  )
+  );
 
   useEffect(() => {
-    handleSearch(searchTerm)
-  }, [searchTerm, handleSearch])
+    handleSearch(searchTerm);
+  }, [searchTerm, handleSearch]);
 
   const handleInputChange = (e) => {
-    setSearchTerm(e.target.value)
-  }
+    setSearchTerm(e.target.value);
+  };
 
-    return(
-    <div className="flex flex-col items-center justify-center bg-white p-8">
-      <form
-        onSubmit={(e) => e.preventDefault()}
-        className="mb-8 w-full max-w-2xl"
-      >
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearchSubmit?.(searchTerm.trim() || 'Search query');
+  };
+
+  return (
+    <div className="flex w-full flex-col items-center justify-center bg-white p-8">
+      <form onSubmit={handleSubmit} className="mb-8 w-full max-w-2xl">
         <div className="relative">
           <input
             type="text"
@@ -81,16 +83,16 @@ export default function SearchBar() {
           />
           <div className="absolute right-0 top-0 mr-4 mt-3 flex items-center">
             <button type="submit" className="text-blue-500 hover:text-blue-600">
-              <Search size={20} />{' '}
-            </button>{' '}
-          </div>{' '}
-        </div>{' '}
-      </form>{' '}
+              <Search size={20} />
+            </button>
+          </div>
+        </div>
+      </form>
+
       {searchResults.length > 0 && (
         <div className="w-full max-w-2xl rounded-lg bg-white p-4 shadow-md">
-          <h2 className="mb-4 text-xl font-bold"> Search Results: </h2>{' '}
+          <h2 className="mb-4 text-xl font-bold">Search Results:</h2>
           <ul>
-            {' '}
             {searchResults.map((result) => (
               <li key={result.id} className="mb-2">
                 <a
@@ -99,14 +101,13 @@ export default function SearchBar() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {' '}
-                  {result.title}{' '}
-                </a>{' '}
+                  {result.title}
+                </a>
               </li>
-            ))}{' '}
-          </ul>{' '}
+            ))}
+          </ul>
         </div>
-      )}{' '}
+      )}
     </div>
-    )
+  );
 }

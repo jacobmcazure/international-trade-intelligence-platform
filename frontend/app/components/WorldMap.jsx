@@ -15,18 +15,27 @@ import SearchBar from "../components/SearchBar";
 //   .domain([0.29, 0.68])
 //   .range(["#ffedea", "#ff5233"]);
 
-export default function WorldMap() {
+export default function WorldMap({ onSelectCountry }) {
 
-    const searchCountry = (sc) => {
-        console.log(sc);
+    const searchCountry = (selection) => {
+        const countryName =
+            typeof selection === "string"
+                ? selection
+                : selection?.name || selection?.country || selection?.label || "Selected Country";
+
+        onSelectCountry?.(countryName);
     };
 
-    return(
-        <World onSelect={searchCountry} size={1400} 
-        hoverColor="lightblue" selectColor="blue" 
-        hints="1" type="select-single"
+    return (
+        <World
+            onSelect={searchCountry}
+            size={1400}
+            hoverColor="lightblue"
+            selectColor="blue"
+            hints="1"
+            type="select-single"
         />
-    )
+    );
 
 //     const [data, setData] = useState([]);
 
