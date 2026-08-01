@@ -3,9 +3,9 @@ import fastifyRedis from '@fastify/redis'
 
 
 async function redisPlugin(fastify, options) {
-    fastify.register(fastifyRedis, {
+    await fastify.register(fastifyRedis, {
         url: process.env.REDIS_URL
-    })
+    });
 }
 
 

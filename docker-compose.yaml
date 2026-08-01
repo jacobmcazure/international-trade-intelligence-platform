@@ -1,4 +1,29 @@
 services:
+
+  api:
+    build: ./api
+    env_file:
+      - .env
+    # environment:
+    #   - FASTIFY_PORT=3000
+    ports:
+      - "3001:3000" # host port : container port
+    depends_on:
+      - redis
+      - postgres
+
+  frontend:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:3000
+      API_BASE_URL: http://api:3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+
   postgres:
     image: postgres:16
     container_name: trade_intel_db

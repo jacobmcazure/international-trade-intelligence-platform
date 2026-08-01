@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Globe from "./components/Globe.jsx";
+import NewsFeed from "./components/NewsFeed.jsx";
 
 export default function Home() {
   return (
@@ -41,6 +42,17 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <section className="w-full flex justify-center mt-24">
+          <div className="relative w-full justify-center">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-400 sm:text-xl">
+              International News
+            </p>
+            <p className="text-sm uppercase tracking-[0.4em] text-slate-500">What's trending lately</p>
+            <NewsFeed />
+          </div>
+        </section>
+
       </div>
     </div>
   );
