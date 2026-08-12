@@ -11,6 +11,9 @@ services:
     depends_on:
       - redis
       - postgres
+    volumes:
+      - ./api:/app
+      - /app/node_modules
 
   frontend:
     build: ./frontend

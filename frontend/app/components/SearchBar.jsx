@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Search } from 'lucide-react';
 
+// TODO: remove eventually
 const sampleData = [
   {
     id: 1,
@@ -31,9 +32,11 @@ const sampleData = [
   },
 ];
 
-export default function SearchBar({ onSearchSubmit }) {
+export default function SearchBar({ allCountryData, onSearchSubmit }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+
+  const countryData = Array.isArray(allCountryData) ? allCountryData : [];
 
   const debounce = (func, delay) => {
     let timeoutId;
@@ -48,13 +51,13 @@ export default function SearchBar({ onSearchSubmit }) {
       if (term.trim() === '') {
         setSearchResults([]);
       } else {
-        const results = sampleData.filter((item) =>
-          item.title.toLowerCase().includes(term.toLowerCase()),
+        const results = countryData.filter((c) =>
+          c.name?.toLowerCase().includes(term.toLowerCase()),
         );
         setSearchResults(results);
       }
     }, 300),
-    [],
+    [countryData],
   );
 
   useEffect(() => {
@@ -67,7 +70,10 @@ export default function SearchBar({ onSearchSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearchSubmit?.(searchTerm.trim() || 'Search query');
+    const trimmedTerm = searchTerm.trim();
+    const exactMatch = countryData.find((c) => c.name?.toLowerCase() === trimmedTerm.toLowerCase());
+
+    onSearchSubmit?.(exactMatch ?? trimmedTerm);
   };
 
   return (
@@ -94,15 +100,15 @@ export default function SearchBar({ onSearchSubmit }) {
           <h2 className="mb-4 text-xl font-bold">Search Results:</h2>
           <ul>
             {searchResults.map((result) => (
-              <li key={result.id} className="mb-2">
-                <a
-                  href={result.url}
-                  className="text-blue-600 hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <li key={result.iso_code || result.name} className="mb-2">
+                <button
+                  type="button"
+                  onClick={() => onSearchSubmit?.(result)}
+                  className="w-full text-left text-blue-600 hover:underline"
                 >
-                  {result.title}
-                </a>
+                  {result.name}
+                  {result.region ? ` · ${result.region}` : ''}
+                </button>
               </li>
             ))}
           </ul>

@@ -11,7 +11,8 @@ export default function DetailsDrawer({ isOpen, title, onClose, children }) {
       />
 
       <aside
-        className={`fixed right-0 top-0 flex h-full w-full max-w-sm flex-col bg-white p-6 shadow-2xl transition-transform duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed right-0 top-0 flex h-full w-full max-w-sm flex-col bg-white p-6 shadow-2xl transition-transform duration-300 
+          ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex items-start justify-between">
           <div>

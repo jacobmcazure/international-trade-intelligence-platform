@@ -9,10 +9,10 @@ const CACHE_TTL_SECONDS = 900; //15 min
 async function newsRoutes(fastify) {
     fastify.get('/news', async(request, reply) => {
         // check cache
-        // const cached = await fastify.redis.get(CACHE_KEY);
-        // if (cached) {
-        //     return JSON.parse(cached);
-        // }
+        const cached = await fastify.redis.get(CACHE_KEY);
+        if (cached) {
+            return JSON.parse(cached);
+        }
 
         //cache miss
         try {

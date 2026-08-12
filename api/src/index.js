@@ -5,6 +5,7 @@ import postgres from './plugins/postgres.js'
 import redis from './plugins/redis.js'
 import sanctionsRoute from './routes/sanctions.js'
 import newsfeedRoute from './routes/newsfeed.js'
+import countriesRoute from './routes/countries.js'
 
 // logs address automatically on startup
 const fastify = Fastify({
@@ -16,6 +17,7 @@ fastify.register(postgres)
 fastify.register(redis)
 fastify.register(sanctionsRoute)
 fastify.register(newsfeedRoute)
+fastify.register(countriesRoute)
 
 // Run Server
 const start = async () => {
