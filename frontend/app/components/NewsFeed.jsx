@@ -21,9 +21,9 @@ async function NewsFeed() {
                         <a href={article.link} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-slate-100 hover:text-sky-400">
                             {article.title}
                         </a>
-                        {articleText && (
+                        {/* {articleText && (
                             <p className="mt-1 text-sm text-slate-300">{articleText}</p>
-                        )}
+                        )} */}
                         {articleDate && (
                             <time className="mt-1 block text-xs text-slate-400" dateTime={articleDate}>
                                 {articleDate}

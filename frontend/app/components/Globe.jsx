@@ -28,8 +28,26 @@ export default function Globe() {
       markers: [
         { location: [37.78, -122.44], size: 0.03, id: 'sf' },
         { location: [40.71, -74.01], size: 0.03, id: 'nyc' },
+        { location: [35.68, 139.65], size: 0.03, id: 'Tokyo' },
+        { location: [-33.87, 151.21], size: 0.03, id: 'Sydney' },
+        { location: [51.50, 0.12], size: 0.03, id: 'London' },
+        { location: [39.90, 116.39], size: 0.03, id: 'Beijing' },
+        { location: [23.12, 113.25], size: 0.03, id: 'Guangzhou'},
+        { location: [-34.60, -58.38], size: 0.03, id: 'Buenos Aires' },
+        { location: [-23.54, -46.63], size: 0.03, id: 'São Paulo'},
+        { location: [25.27, 55.29], size: 0.03, id: 'Dubai'},
+        { location: [6.45, 3.39], size: 0.03, id: 'Lagos'},
+        { location: [33.92, 18.42], size: 0.03, id: 'Cape Town'}
       ],
-      arcs: [{ from: [37.78, -122.44], to: [40.71, -74.01] }],
+      arcs: [
+        { from: [37.78, -122.44], to: [40.71, -74.01] },
+        { from: [37.78, -122.44], to: [35.68, 139.65] },
+        { from: [-33.87, 151.21], to: [35.68, 139.65] },
+        { from: [35.68, 139.65], to: [40.71, -74.01] },
+        { from: [23.12, 113.25], to: [39.90, 116.39] },
+        { from: [-23.54, -46.63], to: [6.45, 3.39] },
+        { from: [6.45, 3.39], to: [33.92, 18.42] }
+      ],
       arcColor: [0.3, 0.5, 1],
       arcWidth: 0.5,
       arcHeight: 0.3,
