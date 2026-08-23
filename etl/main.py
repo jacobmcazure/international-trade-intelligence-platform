@@ -5,7 +5,7 @@ from pipelines.sanctions import SanctionsPipeline
 app = FastAPI()
 router = APIRouter()
 
-
+# TODO: auth-gate FastAPI route
 @router.post("/pipelines/sanctions", tags=["sanctions"], status_code=status.HTTP_202_ACCEPTED)
 async def run_sanctions_pipeline():
     pipeline = SanctionsPipeline()
