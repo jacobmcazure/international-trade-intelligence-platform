@@ -5,35 +5,109 @@ from .BasePipeline import ProcessPipeline
 from psycopg2.extras import execute_values
 
 
-subscription_key = os.getenv("UN_COMTRADE_DB_API_KEY")
+SUBSCRIPTION_KEY = os.getenv("UN_COMTRADE_DB_API_KEY")
 
-hs_codes = { "Coffee" : int("0901"),
+hs_codes = { "Coffee" : "0901",
             "Crude Oil" : 2709, "Refined Petroleum" : 2710, "Natural Gas" : 2711,
             "Semiconductors" : 8542, "Computers" : 8471,
             "Vehicles (EV & Gas)" : 8703, "Vehicle Parts" : 8708,
             "General Medicines" : 3004, "Human Vaccines" : 3002, "Organic Chemicals" : 29, 
          }
 
-hs_codes = ",".join(str(v) for v in hs_codes.values())
-years = '2026,2025,2024,2023,2022,2021,2020,2019'
+HS_CODES = ",".join(str(v) for v in hs_codes.values())
+#years = "2026,2025,2024,2023,2022,2021,2020,2019"
+PERIOD = "2019,2020,2021,2022,2023,2024,2025"
+
+CUSTOMS_TOTAL = "C00"
+MOT_TOTAL = "0"
+PARTNER2_TOTAL = "0"
 
 
 class BilateralTradePipeline(ProcessPipeline):
 
     def __init__(self):
-        self.api_key = subscription_key
-        self.hs_codes = hs_codes
+        self.api_key = SUBSCRIPTION_KEY
+        self.hs_codes = HS_CODES
         self.bilateral_df = pd.DataFrame()
         self.world_df = pd.DataFrame()
         self.merged_df = pd.DataFrame()
 
+    def fetch_trade_data(self, partner_code):
+        frames = []
+
+        for year in PERIOD.split(','):
+            frame = comtradeapicall.getFinalData(
+                subscription_key=self.api_key,
+                typeCode='C',
+                freqCode='A',
+                clCode='HS',
+                period=year,
+                reporterCode=None,
+                cmdCode=self.hs_codes,
+                flowCode='M',
+                partnerCode=partner_code,
+                partner2Code='0',
+                customsCode='C00',
+                motCode='0',
+                includeDesc=True
+            )
+
+            if frame is None:
+                raise RuntimeError(f'Comtrade returned no data for {year}')
+
+            print(f'Fetched {len(frame)} rows for {year}')
+            frames.append(frame)
+
+        return pd.concat(frames, ignore_index=True)
+
     def extract(self):
-        self.bilateral_df = comtradeapicall.getFinalData(subscription_key=self.api_key, typeCode='C', freqCode='A', clCode='HS', period=years,
-                                                    reporterCode=None, cmdCode=self.hs_codes, flowCode='M', partnerCode=None,
-                                                    partner2Code='0', customsCode='C00', motCode='0', includeDesc=True) # country x country
-        self.world_df = comtradeapicall.getFinalData(subscription_key=self.api_key, typeCode='C', freqCode='A', clCode='HS', period=years,
-                                                    reporterCode=None, cmdCode=self.hs_codes, flowCode='M', partnerCode='0',
-                                                    partner2Code='0', customsCode='C00', motCode='0', includeDesc=True) # country x world
+        self.bilateral_df = self.fetch_trade_data(None) # country x country
+        self.world_df = self.fetch_trade_data('0') # country x world
+
+        # --- Call 1: bilateral (country x country) ---
+        # self.bilateral_df = comtradeapicall.getFinalData(
+        #     subscription_key=SUBSCRIPTION_KEY,
+        #     typeCode="C",
+        #     freqCode="A",
+        #     clCode="HS",
+        #     period=PERIOD,
+        #     reporterCode=None,        # all reporters
+        #     cmdCode=HS_CODES,
+        #     flowCode="M",              # imports only
+        #     partnerCode=None,          # all partners (real bilateral pairs)
+        #     partner2Code=PARTNER2_TOTAL,
+        #     customsCode=CUSTOMS_TOTAL,
+        #     motCode=MOT_TOTAL,
+        #     maxRecords=250000,
+        #     format_output="JSON",
+        #     aggregateBy=None,
+        #     breakdownMode="classic",
+        #     countOnly=None,
+        #     includeDesc=True
+        # )
+
+        # --- Call 2: country x World (denominator) ---
+        # self.world_df = comtradeapicall.getFinalData(
+        #     SUBSCRIPTION_KEY,
+        #     typeCode="C",
+        #     freqCode="A",
+        #     clCode="HS",
+        #     period=PERIOD,
+        #     reporterCode=None,        # all reporters
+        #     cmdCode=HS_CODES,
+        #     flowCode="M",
+        #     partnerCode="0",           # World
+        #     partner2Code=PARTNER2_TOTAL,
+        #     customsCode=CUSTOMS_TOTAL,
+        #     motCode=MOT_TOTAL,
+        #     maxRecords=250000,
+        #     format_output="JSON",
+        #     aggregateBy=None,
+        #     breakdownMode="classic",
+        #     countOnly=None,
+        #     includeDesc=True
+        # )
+
 
     def transform(self):
         self.bilateral_df = self.bilateral_df[['cmdCode', 'cmdDesc', 'refYear', 'flowCode', 'reporterCode', 'reporterISO', 'reporterDesc', 'partnerCode', 'partnerISO', 'partnerDesc', 'primaryValue', 'qty']]

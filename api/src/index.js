@@ -6,6 +6,8 @@ import redis from './plugins/redis.js'
 import sanctionsRoute from './routes/sanctions.js'
 import newsfeedRoute from './routes/newsfeed.js'
 import countriesRoute from './routes/countries.js'
+import tradeRoutes from './routes/trade.js'
+import indicatorsRoute from './routes/indicators.js'
 
 // logs address automatically on startup
 const fastify = Fastify({
@@ -18,6 +20,8 @@ fastify.register(redis)
 fastify.register(sanctionsRoute)
 fastify.register(newsfeedRoute)
 fastify.register(countriesRoute)
+fastify.register(tradeRoutes)
+fastify.register(indicatorsRoute)
 
 // Run Server
 const start = async () => {

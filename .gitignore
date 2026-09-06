@@ -12,6 +12,7 @@ dist/
 __pycache__/
 *.pyc
 .venv/
+venv/
 *.egg-info/
 
 # Docker

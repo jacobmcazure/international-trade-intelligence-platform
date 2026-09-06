@@ -1,20 +1,9 @@
 from fastapi import FastAPI, APIRouter, status
-from pipelines.sanctions import SanctionsPipeline
+from routers import sanctions, trade
 
-
+# Entry point into the application. The fastapi instance is created here and all the routes are added in one place
 app = FastAPI()
-router = APIRouter()
 
-# TODO: auth-gate FastAPI route
-@router.post("/pipelines/sanctions", tags=["sanctions"], status_code=status.HTTP_202_ACCEPTED)
-async def run_sanctions_pipeline():
-    pipeline = SanctionsPipeline()
-    pipeline.extract()
-    print(pipeline.sdn_df.shape)
-    pipeline.transform()
-    print(pipeline.sdn_df.columns.tolist())
-    print(pipeline.sdn_df.head())
-    pipeline.load()
-    return {"message": "Sanctions pipeline route triggered successfully."}
+app.include_router(sanctions.router)
+app.include_router(trade.router)
 
-app.include_router(router)
