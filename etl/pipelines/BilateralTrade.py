@@ -15,9 +15,7 @@ hs_codes = { "Coffee" : "0901",
          }
 
 HS_CODES = ",".join(str(v) for v in hs_codes.values())
-#years = "2026,2025,2024,2023,2022,2021,2020,2019"
 PERIOD = "2019,2020,2021,2022,2023,2024,2025"
-
 CUSTOMS_TOTAL = "C00"
 MOT_TOTAL = "0"
 PARTNER2_TOTAL = "0"
@@ -63,50 +61,6 @@ class BilateralTradePipeline(ProcessPipeline):
     def extract(self):
         self.bilateral_df = self.fetch_trade_data(None) # country x country
         self.world_df = self.fetch_trade_data('0') # country x world
-
-        # --- Call 1: bilateral (country x country) ---
-        # self.bilateral_df = comtradeapicall.getFinalData(
-        #     subscription_key=SUBSCRIPTION_KEY,
-        #     typeCode="C",
-        #     freqCode="A",
-        #     clCode="HS",
-        #     period=PERIOD,
-        #     reporterCode=None,        # all reporters
-        #     cmdCode=HS_CODES,
-        #     flowCode="M",              # imports only
-        #     partnerCode=None,          # all partners (real bilateral pairs)
-        #     partner2Code=PARTNER2_TOTAL,
-        #     customsCode=CUSTOMS_TOTAL,
-        #     motCode=MOT_TOTAL,
-        #     maxRecords=250000,
-        #     format_output="JSON",
-        #     aggregateBy=None,
-        #     breakdownMode="classic",
-        #     countOnly=None,
-        #     includeDesc=True
-        # )
-
-        # --- Call 2: country x World (denominator) ---
-        # self.world_df = comtradeapicall.getFinalData(
-        #     SUBSCRIPTION_KEY,
-        #     typeCode="C",
-        #     freqCode="A",
-        #     clCode="HS",
-        #     period=PERIOD,
-        #     reporterCode=None,        # all reporters
-        #     cmdCode=HS_CODES,
-        #     flowCode="M",
-        #     partnerCode="0",           # World
-        #     partner2Code=PARTNER2_TOTAL,
-        #     customsCode=CUSTOMS_TOTAL,
-        #     motCode=MOT_TOTAL,
-        #     maxRecords=250000,
-        #     format_output="JSON",
-        #     aggregateBy=None,
-        #     breakdownMode="classic",
-        #     countOnly=None,
-        #     includeDesc=True
-        # )
 
 
     def transform(self):

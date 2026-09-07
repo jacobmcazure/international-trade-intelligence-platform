@@ -21,19 +21,27 @@ export default function CountryIndicators() {
   function useCountryList() {
     const [countries, setCountries] = useState([]);
     //const [loading, setLoading] = useState(true);
-
+    
     useEffect(() => {
       const controller = new AbortController();
-
+      
       async function load() {
-        const res = await fetch(
-          `/api/countries`,
-          { signal: controller.signal },
-        );
-        const json = await res.json();
-        console.log(json);
-        setCountries(json ?? []);
-        setLoading(false);
+        try {
+          //setError(null);
+          const res = await fetch(
+            `/api/countries`,
+            { signal: controller.signal },
+          );
+          const json = await res.json();
+          setCountries(json ?? []);
+          setLoading(false);
+        } catch(e) {
+          console.error("Failed to load all countries list.", e);
+          //setError(e.message)
+          setData(null);
+        } finally {
+          setLoading(false);
+        }
       }
       load();
 
@@ -59,7 +67,6 @@ export default function CountryIndicators() {
         );
         if (!res.ok) throw new Error(`Request failed: ${res.status}`);
         const json = await res.json();
-       // console.log(json.data ?? json); //PROBLEM HERE
         setData(json.data);
         setMeta({ country: json.country, indicator: json.indicator, units: json.unit });
       } catch (err) {
@@ -162,10 +169,8 @@ export default function CountryIndicators() {
       .attr("stroke", "#1e293b") // slate-800, subtle
       .attr("stroke-width", 1);
 
-    //   svg.selectAll(".tick text").attr("fill", "#94a3b8").attr("font-size", "13px"); // slate-400
-    // svg.selectAll(".domain, .tick line").attr("stroke", "#475569"); // slate-600
     svg.selectAll(".tick text").attr("fill", "#94a3b8").attr("font-size", "13px");
-    svg.select(".fill-slate-400").attr("font-size", "13px"); // your rotated unit label
+    svg.select(".fill-slate-400").attr("font-size", "13px");
   }, [data, indicator]);
 
   return (
@@ -211,6 +216,8 @@ export default function CountryIndicators() {
           <svg ref={svgRef}></svg>
         </div>
       </div>
+
+      <p className="text-sm mt-4 text-gray-300">* Historical data only available up to 2023. Data may be missing or incomplete for some countries.</p>
     </div>
   );
 }
