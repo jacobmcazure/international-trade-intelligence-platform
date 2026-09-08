@@ -38,7 +38,7 @@ export default function ExploreExperience({ countries }) {
 
             <DetailsDrawer
                 isOpen={isDrawerOpen}
-                title={selectedCountry?.name || selectedCountry || 'Selected country'}
+                country={selectedCountry || 'Selected country'}
                 onClose={() => setIsDrawerOpen(false)}
             >
                 {selectedCountry ? (

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Globe from "./components/Globe.jsx";
 import NewsFeed from "./components/NewsFeed.jsx";
-import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -131,8 +130,6 @@ export default function Home() {
           </div>
         </section>
       </div>
-
-      <Footer />
     </div>
   );
 }

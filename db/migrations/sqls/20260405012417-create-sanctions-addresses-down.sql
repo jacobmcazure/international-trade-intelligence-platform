@@ -1,1 +1,0 @@
-DROP TABLE sanctions_addresses;
