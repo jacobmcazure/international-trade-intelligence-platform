@@ -3,6 +3,7 @@
 :root {
   --background: #0f1d2d;
   --foreground: #e2e8f0;
+  --explore-background: #8ec5ff; /*bg-blue-300*/
 }
 
 @theme inline {

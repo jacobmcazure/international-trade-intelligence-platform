@@ -28,11 +28,14 @@ export default function ExploreExperience({ countries }) {
         <div className="relative min-h-screen w-full bg-blue-300 px-6 py-24 text-center">
             <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-4">
                 <div className="max-w-2xl">
-                    <h3 className="text-2xl font-semibold">World Map</h3>
+                    <h3 className="text-2xl font-semibold text-gray-500">World Map</h3>
                     <p className="mt-2 text-sm text-gray-600">Use the interactive map below, or the search bar.</p>
                 </div>
+                <div className="bg-[var(--explore-background)]">
 
-                <SearchBar allCountryData={countries} onSearchSubmit={handleSelect} />
+                  <SearchBar allCountryData={countries} onSearchSubmit={handleSelect} />
+                </div>
+                
                 <WorldMap onSelectCountry={handleSelect} />
             </div>
 

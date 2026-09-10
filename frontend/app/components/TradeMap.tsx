@@ -64,7 +64,7 @@ export default function TradeMap() {
   const hasData = !data || data.nodes.length > 0;
 
   return (
-    <div className="min-h-screen bg-slate-900 px-4 pt-24 pb-16 text-slate-100 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-800 px-4 pt-24 pb-16 text-slate-100 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <header className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight text-white">
@@ -82,7 +82,7 @@ export default function TradeMap() {
             <select
               value={hsCode}
               onChange={(e) => setHsCode(e.target.value)}
-              className="min-w-52 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none focus:border-sky-400"
+              className="min-w-52 rounded-lg border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-slate-100 outline-none focus:border-sky-400 hover:border-sky-400 hover:cursor-pointer"
             >
               {COMMODITIES.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -97,7 +97,7 @@ export default function TradeMap() {
             <select
               value={year}
               onChange={(e) => setYear(Number(e.target.value))}
-              className="min-w-32 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none focus:border-sky-400"
+              className="min-w-32 rounded-lg border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-slate-100 outline-none focus:border-sky-400 hover:border-sky-400 hover:cursor-pointer"
             >
               {YEARS.map((y) => (
                 <option key={y} value={y}>
