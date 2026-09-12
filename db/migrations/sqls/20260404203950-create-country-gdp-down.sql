@@ -1,5 +1,0 @@
-ALTER TABLE countries
-ADD COLUMN gdp_usd DOUBLE PRECISION,
-ADD COLUMN gdp_year INTEGER;
-
-DROP TABLE country_gdp;

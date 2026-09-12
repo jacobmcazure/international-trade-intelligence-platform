@@ -78,7 +78,6 @@ export default function Globe() {
         height: '100%',
         opacity: 0.6,
         zIndex: 0,
-        //filter: 'grayscale(0.25) saturate(0.75)',
         filter: 'saturate(1), contrast(1.05)',
       }}
     />

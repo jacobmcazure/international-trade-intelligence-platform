@@ -2,14 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Globe from "./components/Globe.jsx";
 import NewsFeed from "./components/NewsFeed.jsx";
-import Footer from "./components/Footer";
 
 export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-[var(--page-bg)] text-[var(--page-text)]">
-      <div className="absolute inset-0" />
-
-      <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center pb-24 pt-[3.5rem]">
+      <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center pt-[3.5rem]">
         <section className="relative w-full overflow-hidden">
           <div className="pointer-events-none absolute bottom-3 left-4 z-20 max-w-xs text-[10px] text-slate-200/45 sm:left-6 sm:bottom-4">
             <span>Photo by </span>
@@ -35,7 +32,8 @@ export default function Home() {
               height={1200}
               className="h-full w-full object-cover object-center opacity-90"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,29,45,0.82)_0%,rgba(15,29,45,0.70)_24%,rgba(15,29,45,0.38)_55%,rgba(15,29,45,0.8)_100%)]" />
+            {/* div here to darken bg image and apply gradient */}
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,29,45,0.8)_0%,rgba(15,29,45,0.7)_24%,rgba(15,29,45,0.38)_55%,rgba(15,29,45,0.8)_100%)]" />
           </div>
 
           <div className="relative mx-auto grid min-h-[620px] max-w-6xl items-center px-6 py-12 sm:px-8 lg:px-10">
@@ -49,17 +47,17 @@ export default function Home() {
               </h1>
 
               <p className="mt-4 text-xl font-medium tracking-tight text-sky-100 sm:text-2xl">
-                Smarter global decisions, grounded in real-time trade signals.
+                Global measurements, with data straight from the United Nations.
               </p>
 
               <p className="mt-5 max-w-lg text-base leading-8 text-slate-200 sm:text-lg">
-                Monitor sanctions exposure, geopolitical risk, and supply-chain shifts in one modern platform built for policy teams, analysts, and global operators.
+                Evaluate trade, sanctions, and economic indicators in one platform, one place.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   href="/explore"
-                  className="rounded-lg bg-sky-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 transition hover:bg-sky-400"
+                  className="rounded-lg bg-sky-500 px-7 py-3 text-sm font-semibold text-white shadow-md shadow-sky-500/25 transition hover:bg-sky-400"
                 >
                   Get Started
                 </Link>
@@ -74,8 +72,31 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-24 flex w-full justify-center">
-          <div className="relative w-full max-w-3xl">
+        <section className="relative flex w-full justify-center overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(transparent_0_39px,rgba(56,189,248,0.22)_39px_40px),linear-gradient(90deg,rgba(56,189,248,0.22)_1px,transparent_1px)] bg-size-[40px_40px] opacity-20"
+          />
+          <div className="relative z-10 flex max-w-3xl flex-col justify-center gap-6">
+              <p className="max-w-lg text-4xl">
+                Explore International Trade flows and Country Economic History.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-4">
+                <Link 
+                  href="/trade"
+                  className="rounded-lg bg-blue-800 px-6 py-3 font-semibold text-slate-100 transition shadow-md shadow-blue-700/25 hover:bg-blue-700"
+                  >
+                  Bilateral Trade
+                </Link>
+                <Link
+                  href="/history"
+                  className="rounded-lg bg-blue-800 px-6 py-3 font-semibold text-slate-100 transition shadow-md shadow-blue-700/25 hover:bg-blue-700"
+                >
+                  Country Indicators
+                </Link>
+              </div>
+          </div>
+          <div className="relative z-10 max-w-3xl">
             <div className="relative mx-auto aspect-square w-full max-w-[720px] min-h-[420px]">
               <div className="relative h-full w-full">
                 <Globe />
@@ -84,21 +105,31 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-24 w-full bg-slate-900 px-6 py-14 text-slate-100 sm:px-8 lg:px-10">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-6 flex items-center gap-4">
-              <div>
-                <p className="text-lg font-medium text-slate-100 sm:text-xl">International News</p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.32em] text-slate-500">What's trending lately</p>
+        <section className="relative w-full h-full overflow-hidden">
+          <div className="absolute inset-0">
+            <Image
+              src="/nasa-Q1p7bh3SHj8-unsplash.jpg"
+              alt="NASA view of the world and it's atmosphere from space"
+              width={1600}
+              height={1200}
+              className="h-full w-full object-cover object-center opacity-50"
+            />
+            <div className="absolute inset-0 bg-slate-900/70" />
+          </div>
+          <div className="relative px-6 py-14 text-slate-100 sm:px-8 lg:px-10">
+            <div className="mx-auto max-w-6xl">
+              <div className="mb-6 flex items-center gap-4">
+                <div>
+                  <p className="text-lg font-medium text-slate-100 sm:text-xl">International News</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-[0.32em] text-slate-500">Globally Trending Articles</p>
+                </div>
+                <div className="h-px flex-1 bg-slate-700" />
               </div>
-              <div className="h-px flex-1 bg-slate-700" />
+              <NewsFeed />
             </div>
-            <NewsFeed />
           </div>
         </section>
       </div>
-
-      <Footer />
     </div>
   );
 }

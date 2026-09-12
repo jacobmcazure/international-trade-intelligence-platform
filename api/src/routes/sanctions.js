@@ -25,7 +25,7 @@ async function sanctionsRoutes (fastify, options) {
     
     // sanctions info
     fastify.get('/sanctions', async (request, reply) => {
-        const { country } = request.query
+        const { country } = request.query;
 
         const client = await fastify.pg.connect()
         try {

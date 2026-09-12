@@ -1,36 +1,7 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Search } from 'lucide-react';
-
-// TODO: remove eventually
-const sampleData = [
-  {
-    id: 1,
-    title: 'React Official Documentation',
-    url: 'https://reactjs.org/',
-  },
-  {
-    id: 2,
-    title: 'Mozilla Developer Network (MDN)',
-    url: 'https://developer.mozilla.org/',
-  },
-  {
-    id: 3,
-    title: 'Stack Overflow',
-    url: 'https://stackoverflow.com/',
-  },
-  {
-    id: 4,
-    title: 'GitHub',
-    url: 'https://github.com/',
-  },
-  {
-    id: 5,
-    title: 'npm',
-    url: 'https://www.npmjs.com/',
-  },
-];
+import { Search } from "lucide-react";
 
 export default function SearchBar({ allCountryData, onSearchSubmit }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -77,14 +48,14 @@ export default function SearchBar({ allCountryData, onSearchSubmit }) {
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center bg-white p-8">
-      <form onSubmit={handleSubmit} className="mb-8 w-full max-w-2xl">
+    <div className="flex w-full flex-col items-center justify-center p-8">
+      <form onSubmit={handleSubmit} className="mb-4 w-full max-w-2xl">
         <div className="relative">
           <input
             type="text"
             value={searchTerm}
             onChange={handleInputChange}
-            className="w-full rounded-full border border-gray-200 bg-white px-5 py-3 pr-25 text-base shadow-md transition-shadow duration-200 hover:shadow-lg focus:border-gray-300 focus:outline-none"
+            className="w-full rounded-full border text-black border-gray-200 bg-gray-50 px-5 py-3 pr-25 text-base shadow-md transition-shadow duration-200 hover:shadow-lg focus:border-gray-300 focus:outline-none"
             placeholder="Search Countries..."
           />
           <div className="absolute right-0 top-0 mr-4 mt-3 flex items-center">
@@ -96,15 +67,15 @@ export default function SearchBar({ allCountryData, onSearchSubmit }) {
       </form>
 
       {searchResults.length > 0 && (
-        <div className="w-full max-w-2xl rounded-lg bg-white p-4 shadow-md">
-          <h2 className="mb-4 text-xl font-bold">Search Results:</h2>
+        <div className="w-full max-w-2xl rounded-lg bg-gray-50 p-4 shadow-md">
+          <h2 className="mb-4 text-xl font-bold text-gray-500">Search Results:</h2>
           <ul>
             {searchResults.map((result) => (
               <li key={result.iso_code || result.name} className="mb-2">
                 <button
                   type="button"
                   onClick={() => onSearchSubmit?.(result)}
-                  className="w-full text-left text-blue-600 hover:underline"
+                  className="w-full text-left text-blue-600 hover:underline hover:cursor-pointer"
                 >
                   {result.name}
                   {result.region ? ` · ${result.region}` : ''}

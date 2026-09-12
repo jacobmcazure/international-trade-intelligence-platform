@@ -4,8 +4,6 @@ services:
     build: ./api
     env_file:
       - .env
-    # environment:
-    #   - FASTIFY_PORT=3000
     ports:
       - "3001:3000" # host port : container port
     depends_on:

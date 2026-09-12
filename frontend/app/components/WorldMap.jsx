@@ -1,8 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from "react";
 import World from "@react-map/world";
-import SearchBar from "../components/SearchBar";
 
 
 export default function WorldMap({ onSelectCountry }) {

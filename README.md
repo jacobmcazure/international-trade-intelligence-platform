@@ -1,11 +1,19 @@
 # Trade Intel
 
-An international geopolitical trade intelligence platform that connects bilateral trade flows with sanctions regimes.
+An international geopolitical trade intelligence platform that presents bilateral trade flows, sanctions, 
+country indicators, historical data, commodities, and world news in one place.
 
 ## Services
 
-- `frontend` — Next.js
-- `api` — Node.js / Fastify
-- `workers` — BullMQ background jobs
-- `etl` — FastAPI / Python
-- `db` — PostgreSQL (migrations)
+- `frontend` - Next.js, React, TypeScript
+- `api` - Node.js, Fastify
+- `etl` - Python
+- `db` - PostgreSQL (migrations)
+
+
+## External Data API sources
+
+- `Country Indicators` - worldbank
+- `Bilateral Trade` - UN Comrade trade
+- `Sanctions List` - OFAC (office of foreign assets control)
+- `News Feed` - google news RSS

@@ -1,7 +1,5 @@
-
-
 async function NewsFeed() {
-    const apiBaseUrl = process.env.API_BASE_URL;
+    const apiBaseUrl = process.env.API_BASE_URL ?? 'http://localhost:3001';
     const res = await fetch(`${apiBaseUrl}/news`, { next: { revalidate: 900 } });
 
     if (!res.ok) {
