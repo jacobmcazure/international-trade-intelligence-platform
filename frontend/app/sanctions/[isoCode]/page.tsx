@@ -10,7 +10,7 @@ async function fetchJson(url: string) {
 
 export default async function SanctionsByCountry({ params }: { params: Promise<{ isoCode: string }> }) {
     const { isoCode } = await params;
-    const apiBaseUrl = process.env.API_BASE_URL ?? 'http://localhost:3001';
+    const apiBaseUrl = process.env.API_BASE_URL;
     const countries = await fetchJson(`${apiBaseUrl}/countries`);
     const country = countries.find(
         (item: { iso_code?: string }) => item.iso_code?.toLowerCase() === isoCode.toLowerCase(),
@@ -31,13 +31,18 @@ export default async function SanctionsByCountry({ params }: { params: Promise<{
                 <BackButton />
             </div>
             <p className="mt-2 text-slate-300">ISO-3 code: {country.iso_code}</p>
-            <ul className="mt-8 space-y-3">
-                {sanctions.data?.map((entity: { entity_id?: string; name?: string }) => (
-                    <li key={entity.entity_id} className="rounded border border-slate-700 p-4">
-                        {entity.name ?? entity.entity_id}
-                    </li>
-                ))}
-            </ul>
+            <hr className="mt-4 border-gray-600" />
+                <ul className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-2">
+                    {sanctions.data?.map((entity: { entity_id?: string; name?: string }) => (
+                        <li key={entity.entity_id} className="p-2 text-base">
+                            {entity.name ?? entity.entity_id}
+                        </li>
+                    ))}
+                </ul>
+            <hr className="mt-4 border-gray-600" />
+            <p className="pt-14">
+                You've reached the end of the sanctions list for this country.
+            </p>
         </div>
     )
 }

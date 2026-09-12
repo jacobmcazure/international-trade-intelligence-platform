@@ -1,7 +1,7 @@
 import SanctionsSearch from './SanctionsSearch';
 
 async function fetchData() {
-    const apiBaseUrl = process.env.API_BASE_URL ?? 'http://localhost:3001';
+    const apiBaseUrl = process.env.API_BASE_URL;
     const res = await fetch(`${apiBaseUrl}/countries`);
     if (!res.ok) {
         throw new Error("Failed to fetch data");

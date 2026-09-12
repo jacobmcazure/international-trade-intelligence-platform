@@ -7,7 +7,6 @@ import WorldMap from "./WorldMap";
 
 
 export default function ExploreExperience({ countries }) {
-    //console.log(countries)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     //const [allCountries, setAllCountries] = useState(''); // for querying against country list
     const [selectedCountry, setSelectedCountry] = useState(null);

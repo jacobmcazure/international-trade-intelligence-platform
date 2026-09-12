@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
 export default function SearchBar({ allCountryData, onSearchSubmit }) {
   const [searchTerm, setSearchTerm] = useState('');

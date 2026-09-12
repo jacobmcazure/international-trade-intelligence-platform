@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import World from "@react-map/world";
 
