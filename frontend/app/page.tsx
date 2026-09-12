@@ -47,11 +47,11 @@ export default function Home() {
               </h1>
 
               <p className="mt-4 text-xl font-medium tracking-tight text-sky-100 sm:text-2xl">
-                Smarter global decisions, grounded in data straight from the United Nations.
+                Global measurements, with data straight from the United Nations.
               </p>
 
               <p className="mt-5 max-w-lg text-base leading-8 text-slate-200 sm:text-lg">
-                Monitor sanctions exposure, trade routes, and tariffs in one platform built for policy teams, analysts, and global operators.
+                Evaluate trade, sanctions, and economic indicators in one platform, one place.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
