@@ -14,9 +14,10 @@ services:
       - /app/node_modules
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     environment:
-      NEXT_PUBLIC_API_URL: http://api:3000
       API_BASE_URL: http://api:3000
     ports:
       - "3000:3000"
@@ -50,8 +51,8 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@aethru.com
-      PGADMIN_DEFAULT_PASSWORD: pwdaidai
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "5050:80"
     depends_on:

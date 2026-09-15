@@ -17,6 +17,8 @@ venv/
 
 # Docker
 *.log
+import/
+*.dump
 
 # OS
 .DS_Store

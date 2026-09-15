@@ -36,9 +36,7 @@ async function countriesRoutes(fastify) {
     // });
 
     fastify.get('/countries/codes', async(request, reply) => {
-        const client = await fastify.pg.connect();
-
-        const { rows } = await client.query(
+        const { rows } = await fastify.pg.query(
             'SELECT iso_code, name FROM countries ORDER BY name'
         );
         return rows;

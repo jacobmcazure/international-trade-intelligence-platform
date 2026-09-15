@@ -1,0 +1,10 @@
+{
+  "name": "trade-intel-production-checks",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test production.test.mjs" },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.3.0",
+    "yaml": "^2.8.0"
+  }
+}

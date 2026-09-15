@@ -1,3 +1,15 @@
 node_modules
+.next
+out
+coverage
 
 .env
+.dockerignore
+.git
+.gitignore
+Dockerfile
+README.md
+npm-debug.log*
+*.log
+.env*
+!.env.example

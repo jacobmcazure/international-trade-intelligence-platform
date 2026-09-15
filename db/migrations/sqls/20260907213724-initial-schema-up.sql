@@ -46,25 +46,12 @@ CREATE TABLE public.indicators (
 
 
 
-CREATE TABLE public.migrations (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL,
-    run_on timestamp without time zone NOT NULL
-);
 
 
 
-CREATE SEQUENCE public.migrations_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 
-ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
 
 
 
@@ -108,7 +95,6 @@ CREATE TABLE public.trade_imports (
 
 
 
-ALTER TABLE ONLY public.migrations ALTER COLUMN id SET DEFAULT nextval('public.migrations_id_seq'::regclass);
 
 
 
@@ -137,8 +123,6 @@ ALTER TABLE ONLY public.indicators
 
 
 
-ALTER TABLE ONLY public.migrations
-    ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
 
 
 

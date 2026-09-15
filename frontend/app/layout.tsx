@@ -4,6 +4,9 @@ import "./globals.css";
 import Link from "next/link";
 import Footer from "./components/Footer";
 
+// API data is available at runtime, not while building the Docker image.
+export const dynamic = 'force-dynamic';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

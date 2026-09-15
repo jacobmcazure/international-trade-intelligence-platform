@@ -1,7 +1,7 @@
 import Parser from 'rss-parser';
 
 
-const parser = new Parser();
+const parser = new Parser({ timeout: 8000 });
 const GOOGLE_NEWS_WORLD_URL = 'https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en';
 const CACHE_KEY = 'news:world';
 const CACHE_TTL_SECONDS = 900; //15 min

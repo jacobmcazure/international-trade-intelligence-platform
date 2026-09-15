@@ -1,5 +1,5 @@
 export async function GET(request: Request) {
-    const apiBaseUrl = process.env.api_base_URL || 'http://localhost:3001'
+    const apiBaseUrl = process.env.API_BASE_URL || 'http://localhost:3001'
     const url = new URL(request.url)
 
     const res = await fetch(

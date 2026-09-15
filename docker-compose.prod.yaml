@@ -1,0 +1,157 @@
+name: trade-intel-prod
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env.production.local}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      frontend:
+        condition: service_healthy
+    logging: *default-logging
+
+  frontend:
+    image: trade-intel-frontend:${RELEASE_TAG:?Set RELEASE_TAG in .env.production.local}
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: production
+      API_BASE_URL: http://api:3000
+    expose:
+      - "3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging: *default-logging
+
+  api:
+    image: trade-intel-api:${RELEASE_TAG:?Set RELEASE_TAG in .env.production.local}
+    build:
+      context: ./api
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: production
+      FASTIFY_PORT: "3000"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env.production.local}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production.local}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env.production.local}
+      REDIS_URL: redis://redis:6379
+    expose:
+      - "3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/health/ready').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging: *default-logging
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env.production.local}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production.local}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env.production.local}
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging: *default-logging
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+
+  etl:
+    profiles: ["etl"]
+    build:
+      context: ./etl
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env.production.local}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production.local}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env.production.local}
+      UN_COMTRADE_DB_API_KEY: ${UN_COMTRADE_DB_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    logging: *default-logging
+
+  migrate:
+    image: trade-intel-migrate:${RELEASE_TAG:?Set RELEASE_TAG in .env.production.local}
+    profiles: ["tools"]
+    build:
+      context: ./db
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env.production.local}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production.local}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env.production.local}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    logging: *default-logging
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:

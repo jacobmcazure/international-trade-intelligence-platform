@@ -8,6 +8,7 @@ import newsfeedRoute from './routes/newsfeed.js'
 import countriesRoute from './routes/countries.js'
 import tradeRoutes from './routes/trade.js'
 import indicatorsRoute from './routes/indicators.js'
+import healthRoutes from './routes/health.js'
 
 // logs address automatically on startup
 const fastify = Fastify({
@@ -22,6 +23,34 @@ fastify.register(newsfeedRoute)
 fastify.register(countriesRoute)
 fastify.register(tradeRoutes)
 fastify.register(indicatorsRoute)
+fastify.register(healthRoutes)
+
+let shuttingDown = false
+
+const shutdown = async (signal) => {
+    if (shuttingDown) return
+    shuttingDown = true
+
+    fastify.log.info({ signal }, 'Shutting down API')
+
+    const forceExit = setTimeout(() => {
+        fastify.log.error('Graceful shutdown timed out')
+        process.exit(1)
+    }, 10000)
+    forceExit.unref()
+
+    try {
+        await fastify.close()
+        clearTimeout(forceExit)
+        process.exit(0)
+    } catch (error) {
+        fastify.log.error(error, 'Failed to shut down cleanly')
+        process.exit(1)
+    }
+}
+
+process.once('SIGTERM', () => shutdown('SIGTERM'))
+process.once('SIGINT', () => shutdown('SIGINT'))
 
 // Run Server
 const start = async () => {
