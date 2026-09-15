@@ -2,7 +2,7 @@
 
 Status: production candidate. Docker image builds, a real PostgreSQL migration,
 data import and HTTPS tests are release gates, not assumed successes.
-The design uses one 2 GB Ubuntu Lightsail instance with Docker Compose. Only
+The design uses one 1 GB Ubuntu Lightsail instance with Docker Compose. Only
 Caddy publishes ports. Annual ETL is optional and does not run at startup.
 
 ## Host and release preparation
@@ -20,7 +20,7 @@ or managed database is required. Configure an AWS budget alert.
 
 Install Docker Engine and the Compose plugin using the official Ubuntu
 instructions: https://docs.docker.com/engine/install/ubuntu/. Enable Docker
-at boot. Patch Ubuntu and configure 1–2 GB swap for brief memory spikes.
+at boot. Patch Ubuntu and configure 2 GB swap before building or starting the stack.
 Build images sequentially; if the host runs out of memory, build on another
 Linux Docker host with the same CPU architecture and transfer images using
 `docker save`/`docker load`. Never copy a host node_modules directory into images.

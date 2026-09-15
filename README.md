@@ -33,7 +33,8 @@ Production uses `docker-compose.prod.yaml`. It builds immutable application
 images, runs containers as non-root users where practical, keeps the API and
 data services off the public network, and terminates HTTPS with Caddy.
 
-The recommended host is a single 2 GB Amazon Lightsail Linux instance. See
+The deployment target is a single 1 GB Amazon Lightsail Linux instance with
+2 GB of swap for this low-traffic workload. See
 [`DEPLOYMENT.md`](DEPLOYMENT.md) for provisioning, deployment, migration,
 initial data transfer, annual ETL, and update procedures.
 
